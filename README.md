@@ -9,7 +9,7 @@ Landing page de divulgação para a venda do sobrado no Condomínio Villa Di Cap
 
 ## Página no ar
 
-https://adrianoajorge.github.io/home-page/
+https://adrianoajorge.github.io/Home-page/
 
 ## Como funciona
 
