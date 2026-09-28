@@ -666,6 +666,9 @@
       transition:transform .62s cubic-bezier(.4,0,.2,1), opacity .45s ease;
     }
     .hero-stack .shot[data-near="1"]{opacity:.30;visibility:visible;}
+    /* clicar na foto vizinha traz ela para o centro; a central abre a lupa */
+    .hero-stack .shot[data-near="1"]:not(.is-on){pointer-events:auto;cursor:pointer;}
+    .hero-stack .shot[data-near="1"]:not(.is-on) img{cursor:pointer;}
     .hero-stack .shot.is-on{opacity:1;visibility:visible;}
     .hero-stack .shot::after{
       content:"";position:absolute;inset:auto 0 0 0;height:48%;
@@ -1110,6 +1113,21 @@
       visible ? play() : stop();
     }, {threshold:0.15}).observe(root);
   }
+
+  /* clique na foto vizinha: traz ela para o centro em vez de abrir a lupa.
+     Roda na fase de captura, portanto antes do clique que abre a lupa, que
+     esta ligado na propria <img>. So alcanca os vizinhos, porque as demais
+     fotos tem pointer-events:none, e no celular todas tem. */
+  root.addEventListener("click", function(e){
+    var alvo = e.target.closest && e.target.closest(".shot");
+    if (!alvo || alvo.classList.contains("is-on")) return;
+    var d = parseInt(alvo.style.getPropertyValue("--d") || "0", 10);
+    if (!d) return;
+    e.preventDefault();
+    e.stopPropagation();
+    go(idx + d);
+    bump();
+  }, true);
 
   go(0); play();
 })();
