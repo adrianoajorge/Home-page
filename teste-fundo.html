@@ -776,15 +776,18 @@
     top:-6vh; height:132vh;
     z-index:0;
     pointer-events:none;
-    background:url("fundo-ceu-arco-iris.jpg") center 28% / cover no-repeat;
+    background:url("fundo-ceu-arco-iris-amplo.jpg") 50% 50% / cover no-repeat;
     opacity:var(--ceu-op,.16);
     will-change:transform;
     transform:translate3d(0,0,0);
   }
-  @media (prefers-color-scheme: dark){
-    :root:not([data-theme="light"]) .ceu{opacity:calc(var(--ceu-op,.16) * .6);}
+  @media (max-width:760px){
+    .ceu{background-image:url("fundo-ceu-arco-iris-cel.jpg"); background-position:50% 50%;}
   }
-  :root[data-theme="dark"] .ceu{opacity:calc(var(--ceu-op,.16) * .6);}
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]) .ceu{opacity:calc(var(--ceu-op,.16) * .72);}
+  }
+  :root[data-theme="dark"] .ceu{opacity:calc(var(--ceu-op,.16) * .72);}
   body.sem-ceu .ceu{display:none;}
   /* o conteudo fica sempre por cima da marca d'agua */
   .hero, main, footer{position:relative; z-index:1;}
