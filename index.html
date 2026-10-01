@@ -768,7 +768,38 @@
     .lightbox .lb-prev{left:6px;}
     .lightbox .lb-next{right:6px;}
   }
+
+  /* ---------- FUNDO: o ceu do arco-iris do Villa, como marca d'agua ---------- */
+  .ceu{
+    position:fixed;
+    left:0; right:0;
+    top:-6vh; height:132vh;
+    z-index:0;
+    pointer-events:none;
+    background:url("fundo-ceu-arco-iris-amplo.jpg") 50% 50% / cover no-repeat;
+    opacity:.16;
+    will-change:transform;
+    transform:translate3d(0,0,0);
+  }
+  /* no celular a tela estreita corta a foto pelas laterais: recorte proprio,
+     ja centrado no arco, com a rua embaixo */
+  @media (max-width:760px){
+    .ceu{background-image:url("fundo-ceu-arco-iris-cel.jpg");}
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]) .ceu{opacity:.115;}
+  }
+  :root[data-theme="dark"] .ceu{opacity:.115;}
+  /* o conteudo fica sempre por cima da marca d'agua */
+  .hero, main, footer{position:relative; z-index:1;}
+  /* texto secundario um tom mais escuro: mantem o contraste AA (4.5:1) mesmo
+     sobre as partes mais escuras da foto */
+  :root{--muted:#655f51;}
+  @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--muted:#9aa79f;}}
+  :root[data-theme="dark"]{--muted:#9aa79f;}
 </style>
+
+<div class="ceu" aria-hidden="true"></div>
 
 <div class="hero hero-stack">
   <div class="shots" tabindex="0" role="group" aria-roledescription="carrossel" aria-label="Fotos do Condomínio Villa Di Capri">
@@ -1162,6 +1193,28 @@
   }, true);
 
   go(0); play();
+})();
+</script>
+
+
+<script>
+/* o ceu desliza devagar: 20% da altura da tela ao longo de toda a pagina */
+(function(){
+  var ceu = document.querySelector(".ceu");
+  if (!ceu) return;
+  if (window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  var curso = 1, pedido = false;
+  function medir(){ curso = Math.max(1, document.documentElement.scrollHeight - window.innerHeight); }
+  function desenha(){
+    pedido = false;
+    var p = Math.min(1, Math.max(0, window.scrollY / curso));
+    ceu.style.transform = "translate3d(0," + (-p * window.innerHeight * 0.20).toFixed(1) + "px,0)";
+  }
+  function pede(){ if (!pedido){ pedido = true; requestAnimationFrame(desenha); } }
+  medir(); desenha();
+  addEventListener("scroll", pede, {passive:true});
+  addEventListener("resize", function(){ medir(); pede(); }, {passive:true});
+  addEventListener("load", function(){ medir(); pede(); });
 })();
 </script>
 
